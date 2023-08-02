@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-async function retryFetch(tokenIndex: number, url: string, payload: any): Promise<Response | null> {
+async function retryFetch(tokenIndex: number, url: string, payload: string): Promise<Response | null> {
   if (tokenIndex >= tokens.length) {
     return null; // All tokens have been tried, return null to indicate failure
   }
