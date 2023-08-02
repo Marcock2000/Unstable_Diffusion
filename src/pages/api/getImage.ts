@@ -1,12 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const tokens = [
   "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", "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", "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", "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","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"
 ];
 
-interface FetchImageResponse {
-  data: ArrayBuffer;
-}
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
