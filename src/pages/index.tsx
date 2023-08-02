@@ -133,11 +133,13 @@ const Home = () => {
             </div>
             <div className="header-subtitle">
               <h2 className="text-xl font-normal text-opacity-75">
-                AI Generated Art, but with really weird outcomes
+                AI Generated Art, but with really weird outcomes.
               </h2>
             </div>
             <ImageFetchComponent />
           </div>
+          <p className="text-sm text-white"> If the first time doesn't work give it a few more tries, keep in mind it's a no-budget project 😅 </p>
+
           
       </main>
     </>
