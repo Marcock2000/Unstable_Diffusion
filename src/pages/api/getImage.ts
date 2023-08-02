@@ -1,11 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const tokens = [
   "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", "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", "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", "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","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"
 ];
-
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,37 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const url = 'https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4';
   
-  const payload  = req.body as string;
+  const inputs  = req.body as string;
+  const payload = inputs
 
-
-  let success = false;
-  let tokenIndex = 0;
-  let response;
-
-  while (!success && tokenIndex < tokens.length) {
-    try {
-      const headers = {
-        'Authorization': `Bearer ${tokens[tokenIndex]}`,
-      };
-
-      response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          ...headers,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        success = true;
-      } else {
-        tokenIndex++; // 
-      }
-    } catch (error) {
-      tokenIndex++; // 
-    }
-  }
+  const success = await retryFetch(0, url, payload);
 
   if (!success) {
     console.error('Failed to fetch the image');
@@ -53,15 +23,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const imageBuffer = await response.arrayBuffer();
+    const imageBuffer = await success.arrayBuffer();
     const imageBufferAsBuffer = Buffer.from(imageBuffer);
 
+    // Set the appropriate headers to indicate that the response contains an image
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Content-Disposition', 'inline; filename="image.jpg"');
 
+    // Send the image data as the response
     res.status(200).end(imageBufferAsBuffer);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch the image' });
+  }
+}
+
+async function retryFetch(tokenIndex: number, url: string, payload: any): Promise<Response | null> {
+  if (tokenIndex >= tokens.length) {
+    return null; // All tokens have been tried, return null to indicate failure
+  }
+
+  const headers = {
+    'Authorization': `Bearer ${tokens[tokenIndex]}`,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      return response; // Successful response
+    } else {
+      // Retry with the next token
+      return retryFetch(tokenIndex + 1, url, payload);
+    }
+  } catch (error) {
+    // Retry with the next token
+    return retryFetch(tokenIndex + 1, url, payload);
   }
 }

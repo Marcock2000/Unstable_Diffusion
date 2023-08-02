@@ -92,7 +92,7 @@ const ImageFetchComponent = () => {
 
       {imageDataUrl && (
         <div className="mt-4 flex flex-col items-center justify-center">
-          <Image src={imageDataUrl} alt="Fetched Image" className="rounded-lg shadow-lg" />
+          <Image src={imageDataUrl} alt="Fetched Image" className="rounded-lg shadow-lg" width={512} height={512} />
           <button
             type="button"
             className=" items-center justify-center rounded-xl bg-black text-white my-10 font-bold p-2 uppercase border-white border-2  "
