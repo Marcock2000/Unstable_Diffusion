@@ -1,5 +1,7 @@
 import Head from "next/head";
-import { SetStateAction, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
+import type { SetStateAction } from "react";
 
 const ImageFetchComponent = () => {
   const [inputText, setInputText] = useState("");
@@ -87,7 +89,7 @@ const ImageFetchComponent = () => {
 
       {imageDataUrl && (
         <div className="mt-4 flex flex-col items-center justify-center">
-          <img src={imageDataUrl} alt="Fetched Image" className="rounded-lg shadow-lg" />
+          <Image src={imageDataUrl} alt="Fetched Image" className="rounded-lg shadow-lg" />
           <button
             type="button"
             className=" items-center justify-center rounded-xl bg-black text-white my-10 font-bold p-2 uppercase border-white border-2  "
@@ -108,10 +110,7 @@ const Home = () => {
         <title>Unstable Diffusion </title>
         <meta name="description" content="Powered by Marco Ramirez" />
         <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&display=swap"
-          rel="stylesheet"
-        />
+
       </Head>
       <main className="root bg-black flex flex-col items-center justify-center min-h-screen">
           <div className="header w-full flex flex-col items-center justify-center text-white gap-y-4">
