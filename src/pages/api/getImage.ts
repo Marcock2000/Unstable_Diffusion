@@ -15,10 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const url = 'https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4';
   
-  const { inputs } = req.body;
-  const payload = {
-    inputs,
-  };
+  const payload  = req.body as string;
+
 
   let success = false;
   let tokenIndex = 0;
