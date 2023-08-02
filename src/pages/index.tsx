@@ -3,18 +3,22 @@ import Image from "next/image";
 import { useState } from "react";
 import type { SetStateAction } from "react";
 
+const delay = (ms: number | undefined) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
 const ImageFetchComponent = () => {
+
   const [inputText, setInputText] = useState("");
   const [imageDataUrl, setImageDataUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
 
-  const fetchImage = async () => {
+  const fetchImage = async (retryCount = 0) => {
     const endpoint = "/api/getImage";
 
     try {
       setIsLoading(true);
-      const fullPrompt = inputText
+      const fullPrompt = inputText;
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -29,13 +33,20 @@ const ImageFetchComponent = () => {
       }
 
       const imageBuffer = await response.arrayBuffer();
-      const imageDataUrl = `data:image/jpeg;base64,${Buffer.from(imageBuffer).toString(
-        "base64"
-      )}`;
+      const imageDataUrl = `data:image/jpeg;base64,${Buffer.from(imageBuffer).toString("base64")}`;
       setImageDataUrl(imageDataUrl);
     } catch (error) {
       console.error(error);
       // Handle error
+      if (retryCount < 5) {
+        // Retry fetch after a delay (e.g., 2 seconds)
+        await delay(2000);
+        fetchImage(retryCount + 1); // Retry with an increased retry count
+      } else {
+        // Maximum retries reached, reset loading state and show error
+        setIsLoading(false);
+        alert("Failed to fetch the image. Please try again later.");
+      }
     } finally {
       setIsLoading(false);
     }
