@@ -46,15 +46,18 @@ const ImageFetchComponent = () => {
   };
 
 
-
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (!inputText.trim()) {
       alert("Can't generate an image without a prompt, can you?");
       return;
     }
-    await fetchImage(); // Await the fetchImage() function here
+    fetchImage().catch((error) => {
+      console.error(error);
+      // Handle error
+    });
   };
+  
   
 
   const handleTryAnotherPrompt = () => {
