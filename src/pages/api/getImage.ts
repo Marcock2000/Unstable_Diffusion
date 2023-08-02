@@ -42,10 +42,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (response.ok) {
         success = true;
       } else {
-        tokenIndex++; // Move to the next token if the current one doesn't work
+        tokenIndex++; // 
       }
     } catch (error) {
-      tokenIndex++; // Move to the next token if there's an error with the current one
+      tokenIndex++; // 
     }
   }
 
@@ -58,11 +58,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const imageBuffer = await response.arrayBuffer();
     const imageBufferAsBuffer = Buffer.from(imageBuffer);
 
-    // Set the appropriate headers to indicate that the response contains an image
     res.setHeader('Content-Type', 'image/jpeg');
     res.setHeader('Content-Disposition', 'inline; filename="image.jpg"');
 
-    // Send the image data as the response
     res.status(200).end(imageBufferAsBuffer);
   } catch (error) {
     console.error(error);
