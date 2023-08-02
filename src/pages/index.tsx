@@ -1,14 +1,13 @@
 import Head from "next/head";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 const ImageFetchComponent = () => {
   const [inputText, setInputText] = useState("");
   const [imageDataUrl, setImageDataUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedAesthetic, setSelectedAesthetic] = useState("");
+
 
   const fetchImage = async () => {
-    // Your endpoint URL
     const endpoint = "/api/getImage";
 
     try {
@@ -40,13 +39,13 @@ const ImageFetchComponent = () => {
     }
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setInputText(event.target.value);
   };
 
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     if (!inputText.trim()) {
       alert("Can't generate an imagine without a prompt, can you?");
